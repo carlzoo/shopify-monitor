@@ -1,0 +1,13 @@
+{
+  "delay":"6000",
+  "proxy": "true",
+  "": "",
+  "sites": [
+    "kith.com",
+    "xhibiton.co"
+  ],
+  "webhook": [
+    "webhook1",
+    "webhook2"
+  ]
+}

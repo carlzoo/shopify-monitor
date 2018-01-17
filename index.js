@@ -1,0 +1,26 @@
+const config = require('./config');
+const events = require('./src/events');
+
+require("console-stamp")(console, {
+  pattern: 'HH:MM:ss:l',
+  label: false,
+  colors: {
+    stamp: require('chalk').magenta
+  }
+});
+
+config.sites.forEach(function (site) {
+  require(`./src/monitor.js`)(site)
+});
+
+events.on('newitem', (data) => {
+  for (var i = 0; i < config.webhook.length; i++) {
+    require('./src/webhook')(config.webhook[i], data.url, 'newitem')
+  }
+});
+
+events.on('restock', (data) => {
+  for (var i = 0; i < config.webhook.length; i++) {
+    require('./src/webhook')(config.webhook[i], data.url, 'restock')
+  }
+});
