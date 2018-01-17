@@ -12,6 +12,7 @@ function diff(newdata, olddata) {
 }
 
 module.exports = function init(site) {
+  console.log('Cycled');
   const opts = {
     method: 'GET',
     uri: `https://${site}/sitemap_products_1.xml`,
@@ -43,9 +44,9 @@ module.exports = function init(site) {
           }
 
         });
-      /*setTimeout(function() {
+      setTimeout(function() {
         check(site)
-      }, config.delay)*/
+      }, config.delay)
     })
 }
 
