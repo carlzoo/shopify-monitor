@@ -1,12 +1,11 @@
 {
-  "delay": "20000",
+  "delay": "6000",
   "proxy": "true",
   "": "",
   "sites": [
-    "kith.com"
+    "dcmxgear.myshopify.com"
   ],
   "webhook": [
-    "webhook1",
-    "webhook2"
+    "INSERT WEBHOOK HERE"
   ]
 }

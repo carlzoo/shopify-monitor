@@ -15,12 +15,12 @@ config.sites.forEach(function (site) {
 
 events.on('newitem', (data) => {
   for (var i = 0; i < config.webhook.length; i++) {
-    require('./src/webhook')(config.webhook[i], data.url, 'newitem')
+    require('./src/webhook.js').send(config.webhook[i], data.url, 'newitem')
   }
 });
 
 events.on('restock', (data) => {
   for (var i = 0; i < config.webhook.length; i++) {
-    require('./src/webhook')(config.webhook[i], data.url, 'restock')
+    require('./src/webhook').send(config.webhook[i], data.url, 'restock')
   }
 });

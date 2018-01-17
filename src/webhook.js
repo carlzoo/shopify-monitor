@@ -1,4 +1,6 @@
+const request = require('request-promise');
 exports.send = function(webhook, product, type) {
+  console.log('NEW ITEM YEA OR RESTOCK LMAO');
   const opts = {
     method: 'POST',
     uri: webhook,
@@ -10,11 +12,11 @@ exports.send = function(webhook, product, type) {
       "embeds": [{
         "color": '14177041',
         "title" : "SHOPIFY",
-        "description": `Link: ${product}\nType: ${type}`,
+        "description": `Link: ${product.toString()}\nType: ${type}`,
       }]
     }
   }
-  rp(opts)
+  request(opts)
     .then(function(response) {
 
     })
