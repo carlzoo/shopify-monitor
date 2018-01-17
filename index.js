@@ -20,6 +20,7 @@ events.on('newitem', (data) => {
 });
 
 events.on('restock', (data) => {
+  console.log(data);
   for (var i = 0; i < config.webhook.length; i++) {
     require('./src/webhook').send(config.webhook[i], data.url, 'restock')
   }

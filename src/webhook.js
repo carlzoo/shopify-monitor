@@ -12,7 +12,7 @@ exports.send = function(webhook, product, type) {
       "embeds": [{
         "color": '14177041',
         "title" : "SHOPIFY",
-        "description": `Link: ${product.toString()}\nType: ${type}`,
+        "description": `Link: ${product}\nType: ${type}`,
       }]
     }
   }

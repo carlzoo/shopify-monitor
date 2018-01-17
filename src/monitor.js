@@ -46,8 +46,10 @@ module.exports = function init(site) {
         $ = cheerio.load(data);
         if (cycle == 0) {
           arr = original;
+          //console.log('og');
         } else {
           arr = newprod;
+          //console.log('newprod');
         }
           $('urlset url').each(function() {
             var lastmod = $(this).children('lastmod').text()
@@ -55,8 +57,13 @@ module.exports = function init(site) {
             var children = $(this).children();
             var imgchild = $(children).children();
             title = $(imgchild[1]).text()
-            if (title ==='') {
-
+            if (title === '') {
+              data = {
+                url: url,
+                title: "Title Missing",
+                time: lastmod
+              }
+              arr.push(data)
             } else {
               data = {
                 url: url,
@@ -71,12 +78,14 @@ module.exports = function init(site) {
           if (cycle == 0) {
 
           } else {
+            //console.log(newprod.length);
+            //console.log(original.length);
             if (newprod.length > original.length) {
               console.log('NEW');
               console.log(diff(newprod, original));
-              events.emit('newitem', () => {
-                url: diff(newprod, original).url
-              })
+              events.emit('newitem', {
+                url: JSON.parse(diff(newprod, original))[0].url
+              });
               original = newprod
             }
 
@@ -87,16 +96,16 @@ module.exports = function init(site) {
             if (newprod.length == original.length) {
               //console.log('Same burv');
               for (var i = 0; i < newprod.length; i++) {
-                if (newprod[i].time === original[i].time) {
+                if (newprod[i].time.toString() === original[i].time.toString()) {
                   //console.log(`${newprod[i].time} - ${original[i].time}`);
                 } else {
                   console.log('Restock: ' + newprod[i].title);
-                  events.emit('restock', () => {
+                  events.emit('restock', {
                     url: newprod[i].url
-                  })
+                  });
                 }
-                original = newprod;
               }
+              original = newprod;
             }
           }
           cycle++;
