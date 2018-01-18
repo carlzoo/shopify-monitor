@@ -8,15 +8,32 @@ cycle = 0;
 var original = [];
 var newprod = [];
 var proxylist = [];
-/*var fs = require('fs');
-var array = fs.readFileSync('proxies.txt').toString().split("\n");
+var fs = require('fs');
+var array = fs.readFileSync(__dirname + '/../proxies.txt').toString().split("\n");
 for(i in array) {
-    console.log(array[i]);
+  if (array[i] === '') {
+
+  } else {
+    proxylist.push(array[i])
+  }
 }
 
 function getproxy() {
-
-}*/
+  if (proxylist.length == 0) {
+    proxy = 'http://localhost'
+    return proxy;
+  } else {
+    ogprox = proxylist[Math.floor(Math.random() * proxylist.length)]
+    if (ogprox.split(':')[2] == undefined) {
+      proxy = `http://${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
+      return proxy;
+    } else {
+      proxy = `http://${ogprox.split(':')[2]}:${ogprox.split(':')[3]}@${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
+      return proxy;
+    }
+  }
+  console.log(proxy);
+}
 
 function diff(one, two) {
   return _.reject(one, _.partial(_.findWhere, two, _));
@@ -26,7 +43,7 @@ module.exports = function init(site) {
 
   //console.log(diff(one, two));
 
-  console.log('Cycled ' + cycle.toString() + ' - ' + site);
+  //console.log('Cycled ' + cycle.toString() + ' - ' + site);
   const opts = {
     method: 'GET',
     uri: `https://${site}/sitemap_products_1.xml`,
@@ -34,13 +51,14 @@ module.exports = function init(site) {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
     },
     gzip: true,
+    proxy: getproxy(),
     json: true,
     simple: false
   }
   request(opts)
     .then(function (data) {
-      if (data.indexOf("Try again in a couple minutes") != -1) {
-        console.log('You are banned try again later.');
+      if (data.toString().indexOf("Try again in a couple minutes") != -1) {
+        console.log('You are banned try again later. - ' + site);
         console.log(data);
       } else {
         $ = cheerio.load(data);
@@ -84,7 +102,7 @@ module.exports = function init(site) {
               console.log('NEW');
               console.log(diff(newprod, original));
               events.emit('newitem', {
-                url: JSON.parse(diff(newprod, original))[0].url
+                url: diff(newprod, original)[0].url
               });
               original = newprod
             }
@@ -116,39 +134,3 @@ module.exports = function init(site) {
       }
     })
 }
-
-/*function check(site) {
-  console.log('Cycled');
-  const opts = {
-    method: 'GET',
-    uri: `https://${site}/sitemap_products_1.xml`,
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
-    },
-    gzip: true,
-    json: true
-  }
-  request(opts)
-    .then(function (newdata) {
-      $ = cheerio.load(newdata);
-      $('urlset url').each(function() {
-        var lastmod = $(this).children('lastmod').text()
-        var url = $(this).children('url').text()
-        var children = $(this).children();
-        var imgchild = $(children).children();
-        title = $(imgchild[1]).text()
-        if (title ==='') {
-
-        } else {
-          data = {
-            url: url,
-            title: title,
-            time: lastmod
-          }
-          newprod.push(data)
-          //console.log(`${title} - ${lastmod}`);
-        }
-      });
-
-    })
-}*/

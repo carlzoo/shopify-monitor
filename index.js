@@ -1,6 +1,5 @@
 const config = require('./config');
 const events = require('./src/events');
-
 require("console-stamp")(console, {
   pattern: 'HH:MM:ss:l',
   label: false,
@@ -8,6 +7,8 @@ require("console-stamp")(console, {
     stamp: require('chalk').magenta
   }
 });
+
+console.log('Monitor Started');
 
 config.sites.forEach(function (site) {
   require(`./src/monitor.js`)(site)

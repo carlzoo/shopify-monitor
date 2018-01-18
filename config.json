@@ -1,11 +1,13 @@
 {
-  "delay": "10000",
+  "delay": "6000",
   "proxy": "true",
   "": "",
   "sites": [
-    "dcmxgear.myshopify.com"
+    "kith.com",
+    "shop.bdgastore.com",
+    "shop.palaceskateboards.com"
   ],
   "webhook": [
-    "INSERT WEBHOOK HERE"
+    "https://discordapp.com/api/webhooks/403351062481731594/UpzaPZPqkMPJOhsrT4-cau-F_HthZ4u5BKAq8Yi0JvM7fnlsouBJ9C6j_uWMAxgE372P"
   ]
 }
