@@ -39,14 +39,14 @@ function diff(one, two) {
   return _.reject(one, _.partial(_.findWhere, two, _));
 }
 
-module.exports = function init(site) {
+module.exports.init = function init(site) {
 
   //console.log(diff(one, two));
 
   //console.log('Cycled ' + cycle.toString() + ' - ' + site);
   const opts = {
     method: 'GET',
-    uri: `https://${site}/sitemap_products_1.xml`,
+    uri: `${site}/sitemap_products_1.xml`,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
     },
