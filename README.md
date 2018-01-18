@@ -34,5 +34,4 @@ If you come across an issue please make a GitHub issue for it and I will respond
 
 ## TODO
 
-1. Add Proxies
-2. Finish webhook
+1. No TODO for now.
