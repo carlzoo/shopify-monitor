@@ -21,12 +21,7 @@ console.log(chalk.red('-------------------------'));
 console.log(chalk.cyan('Initializing (' + config.sites.length + ') sites.'));
 console.log(chalk.red('-------------------------'));
 config.sites.forEach(function (site) {
-  try {
       startmod = new mod(site);
-  } catch (e) {
-
-  }
-
 });
 /*setTimeout(function() {
   init();
@@ -53,7 +48,6 @@ events.on('newitem', (data) => {
 });
 
 events.on('restock', (data) => {
-  console.log(data);
   for (var i = 0; i < config.webhook.length; i++) {
     require('./src/webhook').send(config.webhook[i], data.url, 'restock')
   }

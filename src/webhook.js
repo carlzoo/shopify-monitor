@@ -1,5 +1,5 @@
 const request = require('request-promise');
-exports.send = function(webhook, product, type) {
+exports.send = function send (webhook, product, type) {
   const opts = {
     method: 'GET',
     uri: product,
@@ -42,7 +42,7 @@ exports.send = function(webhook, product, type) {
         },
         body: {
           "embeds": [{
-            "color": 14177041,
+            "color": 65440,
             "title" : response.product.title.replace("\/", "/"),
             "url": product,
             "thumbnail": {
@@ -78,8 +78,15 @@ exports.send = function(webhook, product, type) {
         }
       }
       request(opts)
-        .then(function(response) {
+      .then(function(response) {
 
-        })
+      })
+      .catch(function(response) {
+        if (response.message === 'You are being rate limited.') {
+          setTimeout(function() {
+            send(webhook, product, type)
+          }, 5000)
+        }
+      })
     })
 }

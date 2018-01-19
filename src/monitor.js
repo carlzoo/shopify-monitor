@@ -7,7 +7,6 @@ const events = require('./events');
 
 class init {
   constructor(site) {
-    try {
       var cycle = 0;
       var original = [];
       var newprod = [];
@@ -46,7 +45,7 @@ class init {
       //console.log(diff(one, two));
       initialize()
       function initialize() {
-
+        //console.log('yo ' + site);
         var prox = getproxy()
         //console.log(prox);
         var mainurl;
@@ -77,6 +76,7 @@ class init {
         request(opts)
           .then(function(data) {
           //console.log(data);
+          //console.log(`Cycle - ${cycle}`);
             if (cycle == 0) {
               console.log(chalk.green('Initialized - ' + site));
             }
@@ -141,7 +141,7 @@ class init {
                       if (newprod[i].time.toString() === original[i].time.toString()) {
                         //console.log(`${newprod[i].time} - ${original[i].time}`);
                       } else {
-                        console.log('Restock: ' + newprod[i].title);
+                        console.log('Restock: ' + newprod[i].title + ' - ' + site);
                         events.emit('restock', {
                           url: newprod[i].url
                         });
@@ -158,12 +158,9 @@ class init {
             }
           })
           .catch(function(err) {
-
+            //console.log('Err - ' + site);
           })
       }
-    } catch (e) {
-
-    }
   }
 }
 
