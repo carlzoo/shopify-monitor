@@ -2,7 +2,7 @@ const request = require('request-promise');
 exports.send = function send (webhook, product, type) {
   const opts = {
     method: 'GET',
-    uri: product,
+    uri: `${product}.json`,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
     },
@@ -33,60 +33,75 @@ exports.send = function send (webhook, product, type) {
       } else {
         imageurl = response.product.images[0].src.replace("\/", "/");
       }
-      const opts = {
-        method: 'POST',
-        uri: webhook,
-        json: true,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: {
-          "embeds": [{
-            "color": 65440,
-            "title" : response.product.title.replace("\/", "/"),
-            "url": product,
-            "thumbnail": {
-              "url": imageurl
-            },
-            "footer": {
-              "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-              "text": "Shopify Monitor by Rock"
-            },
-            "fields": [
-              {
-                "name": "Site",
-                "value": product.split('://')[1].split('/')[0],
-                "inline": true
-              },
-              {
-                "name": "Type",
-                "value": type,
-                "inline": true
-              },
-              {
-                "name": "Price",
-                "value": response.product.variants[0].price,
-                "inline": false
-              },
-              {
-                "name": "Links",
-                "value": links,
-                "inline": true
-              }
-            ]
-          }]
-        }
-      }
-      request(opts)
-      .then(function(response) {
+      var prebrand = response.product.vendor;
+      var brand = prebrand.toLowerCase()
 
-      })
-      .catch(function(response) {
-        if (response.message === 'You are being rate limited.') {
-          setTimeout(function() {
-            send(webhook, product, type)
-          }, 5000)
+      if (brand.includes('adidas') == true || brand.includes('nike') == true || brand.includes('jordan') == true || brand.includes('yeezy') == true ) {
+        hookit()
+		    //console.log('it did ' + brand)
+      } else {
+        //console.log('no it didnt ' + brand)
+      }
+      function hookit() {
+        const opts = {
+          method: 'POST',
+          uri: webhook,
+          json: true,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: {
+            "embeds": [{
+              "color": 65440,
+              "title" : response.product.title.replace("\/", "/"),
+              "url": product,
+              "thumbnail": {
+                "url": imageurl
+              },
+              "footer": {
+                "icon_url": "https://cdn.shopify.com/s/files/1/1061/1924/products/Heart_Eyes_Emoji_2_large.png?v=1513251039",
+                "text": "Shopify Monitor aka Moneytor - By Rock"
+              },
+              "fields": [
+                {
+                  "name": "Site",
+                  "value": product.split('://')[1].split('/')[0],
+                  "inline": true
+                },
+                {
+                  "name": "Type",
+                  "value": type,
+                  "inline": true
+                },
+                {
+                  "name": "Price",
+                  "value": response.product.variants[0].price,
+                  "inline": true
+                },
+        				{
+        				  "name": "Brand",
+                  "value": response.product.vendor,
+                  "inline": true
+        				},
+                {
+                  "name": "Links",
+                  "value": links,
+                  "inline": false
+                }
+              ]
+            }]
+          }
         }
-      })
+        request(opts)
+        .then(function(response) {
+
+        })
+        .catch(function(e) {
+          //console.log(e);
+          setTimeout(function() {
+            send(webhook, product, type);
+          }, 10000)
+        })
+      }
     })
 }
