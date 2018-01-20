@@ -24,11 +24,13 @@ exports.send = function send (webhook, product, type, timestamp) {
         }
         if (real == true) {
           start()
+          console.log('Restock: ' + response.product.title + ' - ' + product.split("/produ")[0].split('//')[1]);
+        } else {
+
         }
       } else {
         start()
       }
-<<<<<<< HEAD
       function start() {
         links = ''
         for (var i = 0; i < response.product.variants.length; i++) {
@@ -57,7 +59,7 @@ exports.send = function send (webhook, product, type, timestamp) {
         if (config.keywords.length > 0) {
           var matched = false;
           for (var i = 0; i < config.keywords.length; i++) {
-            if (response.product.title.indexOf(config.keywords[i]) != -1) {
+            if (response.product.title.toLowerCase().indexOf(config.keywords[i].toLowerCase()) != -1) {
               if (matched == false) {
                 matched = true;
               }
@@ -65,6 +67,8 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           if (matched == true) {
             hookit()
+          } else {
+            //console.log('Na dawg it didnt - ' + response.product.title);
           }
         } else {
           hookit()
@@ -131,62 +135,5 @@ exports.send = function send (webhook, product, type, timestamp) {
           })
       }
       }
-=======
-      const opts = {
-        method: 'POST',
-        uri: webhook,
-        json: true,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: {
-          "embeds": [{
-            "color": 65440,
-            "title" : response.product.title.replace("\/", "/"),
-            "url": product,
-            "thumbnail": {
-              "url": imageurl
-            },
-            "footer": {
-              "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
-              "text": "Shopify Monitor by Rock"
-            },
-            "fields": [
-              {
-                "name": "Site",
-                "value": product.split('://')[1].split('/')[0],
-                "inline": true
-              },
-              {
-                "name": "Type",
-                "value": type,
-                "inline": true
-              },
-              {
-                "name": "Price",
-                "value": response.product.variants[0].price,
-                "inline": false
-              },
-              {
-                "name": "Links",
-                "value": links,
-                "inline": true
-              }
-            ]
-          }]
-        }
-      }
-      request(opts)
-      .then(function(response) {
-
-      })
-      .catch(function(response) {
-        if (response.message === 'You are being rate limited.') {
-          setTimeout(function() {
-            send(webhook, product, type)
-          }, 5000)
-        }
-      })
->>>>>>> parent of f637d0a... YAY
     })
 }

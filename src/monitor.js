@@ -141,7 +141,6 @@ class init {
                       if (newprod[i].time.toString() === original[i].time.toString()) {
                         //console.log(`${newprod[i].time} - ${original[i].time}`);
                       } else {
-                        console.log('Restock: ' + newprod[i].title + ' - ' + site);
                         events.emit('restock', {
                           url: newprod[i].url,
                           time: newprod[i].time.toString()
