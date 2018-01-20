@@ -1,10 +1,38 @@
 const request = require('request-promise');
 const config = require('../config');
 exports.send = function send (webhook, product, type, timestamp) {
+  var proxylist = [];
+  var fs = require('fs');
+  var array = fs.readFileSync(__dirname + '/../proxies.txt').toString().split("\n");
+  for (var i in array) {
+    if (array[i] === '') {
+
+    } else {
+      proxylist.push(array[i])
+    }
+  }
+
+  function getproxy() {
+    if (proxylist.length == 0) {
+      var proxy = 'http://localhost'
+      return proxy;
+    } else {
+      var ogprox = proxylist[Math.floor(Math.random() * proxylist.length)]
+      if (ogprox.split(':')[2] == undefined) {
+        var proxy = `http://${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
+        return proxy;
+      } else {
+        var proxy = `http://${ogprox.split(':')[2]}:${ogprox.split(':')[3]}@${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
+        return proxy;
+      }
+    }
+    //console.log(proxy);
+  }
   sent = false;
   const opts = {
     method: 'GET',
     uri: product,
+    proxy: getproxy(),
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
     },
@@ -33,6 +61,7 @@ exports.send = function send (webhook, product, type, timestamp) {
       }
       function start() {
         links = ''
+        sizecount = 0;
         for (var i = 0; i < response.product.variants.length; i++) {
           if (response.product.variants[i].inventory_quantity == undefined) {
             stock = 'Unavailable'
@@ -42,7 +71,10 @@ exports.send = function send (webhook, product, type, timestamp) {
             stock = response.product.variants[i].inventory_quantity
           }
           if (response.product.variants[i].updated_at === timestamp) {
-            links += `[${response.product.variants[i].title} / Stock: ${stock}](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)\n`
+            if (sizecount < 6) {
+              sizecount++;
+              links += `[${response.product.variants[i].title} / Stock: ${stock}](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)\n`
+            }
           }
         }
         if (type === 'restock') {
@@ -68,12 +100,19 @@ exports.send = function send (webhook, product, type, timestamp) {
             }
           }
           if (matched == true) {
-            hookit()
-            if (sent == true) {
+            for (var i = 0; i < config.negkeywords.length; i++) {
+              if (response.product.title.indexOf(config.negkeywords[i]) != -1) {
+                matched = false;
+              }
+            }
+            if (matched == true) {
+              hookit()
+              if (sent == true) {
 
-            } else {
-              sent = true;
-              console.log('Restock: ' + response.product.title.replace("\/", "/") + ' - ' + product.split("/produ")[0].split('//')[1]);
+              } else {
+                sent = true;
+                console.log('Restock: ' + response.product.title.replace("\/", "/") + ' - ' + product.split("/produ")[0].split('//')[1]);
+              }
             }
           } else {
             //console.log('Na dawg it didnt - ' + response.product.title);
@@ -92,6 +131,7 @@ exports.send = function send (webhook, product, type, timestamp) {
             method: 'POST',
             uri: webhook,
             json: true,
+            proxy: getproxy(),
             headers: {
               'Content-Type': 'application/json'
             },
@@ -143,8 +183,16 @@ exports.send = function send (webhook, product, type, timestamp) {
             sent = false;
           })
           .catch(function(e) {
-            console.log('getting err');
-            console.log(e.message);
+            if (e.message.indexOf('embeds') != -1) {
+              sizecount = 0
+              links = ''
+              if (response.product.variants[i].updated_at === timestamp) {
+                if (sizecount < 3) {
+                  sizecount++;
+                  links += `[${response.product.variants[i].title} / Stock: ${stock}](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)\n`
+                }
+              }
+            }
             setTimeout(function() {
               send(webhook, product, type);
             }, 10000)

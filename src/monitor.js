@@ -70,14 +70,14 @@ class init {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
           },
           gzip: true,
-          proxy: prox,
+          //proxy: prox,
           json: true,
           simple: false
         }
         request(opts)
           .then(function(data) {
           //console.log(data);
-          //console.log(`Cycle - ${cycle}`);
+         //console.log(`Cycle - ${cycle}`);
             if (cycle == 0) {
               console.log(chalk.green('Initialized - ' + site));
             }

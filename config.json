@@ -1,5 +1,5 @@
 {
-  "delay": "10000",
+  "delay": "8000",
   "proxy": "true",
   "keywords": [
     "jordan",
@@ -9,6 +9,9 @@
     "fear of god",
     "aoyb",
     "boost"
+  ],
+  "negkeywords": [
+    "infant"
   ],
   "sites": [
     "kith.com",
