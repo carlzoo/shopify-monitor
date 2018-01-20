@@ -1,6 +1,7 @@
 const request = require('request-promise');
 const config = require('../config');
 exports.send = function send (webhook, product, type, timestamp) {
+  sent = false;
   const opts = {
     method: 'GET',
     uri: product,
@@ -40,7 +41,9 @@ exports.send = function send (webhook, product, type, timestamp) {
           } else {
             stock = response.product.variants[i].inventory_quantity
           }
-          links += `**[${response.product.variants[i].title} - Checkout](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)**\nStock: ${stock}\n\n`
+          if (response.product.variants[i].updated_at === timestamp) {
+            links += `**[${response.product.variants[i].title} - Checkout](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)**\nStock: ${stock}\n\n`
+          }
         }
         if (type === 'restock') {
           type = 'Restock'
@@ -66,7 +69,12 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           if (matched == true) {
             hookit()
-            console.log('Restock: ' + response.product.title + ' - ' + product.split("/produ")[0].split('//')[1]);
+            if (sent == true) {
+
+            } else {
+              sent = true;
+              console.log('Restock: ' + response.product.title.replace("\/", "/") + ' - ' + product.split("/produ")[0].split('//')[1]);
+            }
           } else {
             //console.log('Na dawg it didnt - ' + response.product.title);
           }
@@ -74,7 +82,7 @@ exports.send = function send (webhook, product, type, timestamp) {
           hookit()
         }
         function hookit() {
-          console.log('Im finna hook');
+          //console.log('Im finna hook');
           const opts = {
             method: 'POST',
             uri: webhook,
@@ -116,9 +124,9 @@ exports.send = function send (webhook, product, type, timestamp) {
                     "inline": true
           				},
                   {
-                    "name": "Links",
+                    "name": "Restocked Sizes Links",
                     "value": links,
-                    "inline": false
+                    "inline": true
                   }
                 ]
               }]
@@ -126,10 +134,12 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           request(opts)
           .then(function(response) {
-            console.log('Ya i hooked');
+            //console.log('Ya i hooked');
+            sent = false;
           })
           .catch(function(e) {
-            //console.log(e);
+            console.log('getting err');
+            console.log(e.message);
             setTimeout(function() {
               send(webhook, product, type);
             }, 10000)

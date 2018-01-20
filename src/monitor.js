@@ -150,7 +150,6 @@ class init {
                           });
                         } else {
                           if (lastone === newprod[i].url) {
-
                           } else {
                             lastone = newprod[i].url
                             events.emit('restock', {

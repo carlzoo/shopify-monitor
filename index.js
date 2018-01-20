@@ -3,6 +3,7 @@ const events = require('./src/events');
 const taskLib = require('./task.js');
 const chalk = require('chalk');
 const fs = require('fs');
+
 require("console-stamp")(console, {
   pattern: 'HH:MM:ss:l',
   label: false,
@@ -10,7 +11,9 @@ require("console-stamp")(console, {
     stamp: require('chalk').white
   }
 });
+
 var mod = require(`./src/monitor`).init
+
 console.log(chalk.red('-------------------------'));
 console.log(chalk.cyan('   Shopify Monitor V2'));
 console.log(chalk.cyan('        By Rock'));
@@ -20,26 +23,10 @@ console.log(chalk.magenta(`Found ${fs.readFileSync(__dirname + '/proxies.txt').t
 console.log(chalk.red('-------------------------'));
 console.log(chalk.cyan('Initializing (' + config.sites.length + ') sites.'));
 console.log(chalk.red('-------------------------'));
+
 config.sites.forEach(function (site) {
-      startmod = new mod(site);
+  startmod = new mod(site);
 });
-/*setTimeout(function() {
-  init();
-}, 500);
-
-function init() {
-  console.log(chalk.green('Starting Tasks...'));
-
-  taskArr.map(function(task, i) {
-
-          taskLib.start(task, (err, response) => {
-              if (err) {
-                  console.log(chalk.redBright.red(err));
-                  return process.exit(1);
-              }
-          });
-  });
-}*/
 
 events.on('newitem', (data) => {
   for (var i = 0; i < config.webhook.length; i++) {
