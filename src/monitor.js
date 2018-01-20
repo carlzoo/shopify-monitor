@@ -7,6 +7,7 @@ const events = require('./events');
 
 class init {
   constructor(site) {
+      var lastone = '';
       var cycle = 0;
       var original = [];
       var newprod = [];
@@ -141,10 +142,23 @@ class init {
                       if (newprod[i].time.toString() === original[i].time.toString()) {
                         //console.log(`${newprod[i].time} - ${original[i].time}`);
                       } else {
-                        events.emit('restock', {
-                          url: newprod[i].url,
-                          time: newprod[i].time.toString()
-                        });
+                        if (lastone === '') {
+                          lastone = newprod[i].url
+                          events.emit('restock', {
+                            url: newprod[i].url,
+                            time: newprod[i].time.toString()
+                          });
+                        } else {
+                          if (lastone === newprod[i].url) {
+
+                          } else {
+                            lastone = newprod[i].url
+                            events.emit('restock', {
+                              url: newprod[i].url,
+                              time: newprod[i].time.toString()
+                            });
+                          }
+                        }
                       }
                     }
                     original = newprod;

@@ -24,7 +24,6 @@ exports.send = function send (webhook, product, type, timestamp) {
         }
         if (real == true) {
           start()
-          console.log('Restock: ' + response.product.title + ' - ' + product.split("/produ")[0].split('//')[1]);
         } else {
 
         }
@@ -67,6 +66,7 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           if (matched == true) {
             hookit()
+            console.log('Restock: ' + response.product.title + ' - ' + product.split("/produ")[0].split('//')[1]);
           } else {
             //console.log('Na dawg it didnt - ' + response.product.title);
           }
@@ -74,6 +74,7 @@ exports.send = function send (webhook, product, type, timestamp) {
           hookit()
         }
         function hookit() {
+          console.log('Im finna hook');
           const opts = {
             method: 'POST',
             uri: webhook,
@@ -125,7 +126,7 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           request(opts)
           .then(function(response) {
-
+            console.log('Ya i hooked');
           })
           .catch(function(e) {
             //console.log(e);
