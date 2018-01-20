@@ -1,7 +1,15 @@
 {
   "delay": "10000",
   "proxy": "true",
-  "": "",
+  "keywords": [
+    "jordan",
+    "nike",
+    "adidas",
+    "yeezy",
+    "fear of god",
+    "aoyb",
+    "boost"
+  ],
   "sites": [
     "kith.com",
     "shop.bdgastore.com",

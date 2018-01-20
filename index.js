@@ -12,7 +12,7 @@ require("console-stamp")(console, {
 });
 var mod = require(`./src/monitor`).init
 console.log(chalk.red('-------------------------'));
-console.log(chalk.cyan('   Shopify Monitor V1'));
+console.log(chalk.cyan('   Shopify Monitor V2'));
 console.log(chalk.cyan('        By Rock'));
 console.log(chalk.red('-------------------------'));
 console.log(chalk.magenta(`Found ${config.sites.length} sites.`));
@@ -43,12 +43,12 @@ function init() {
 
 events.on('newitem', (data) => {
   for (var i = 0; i < config.webhook.length; i++) {
-    require('./src/webhook.js').send(config.webhook[i], data.url, 'newitem')
+    require('./src/webhook.js').send(config.webhook[i], data.url, 'newitem', '')
   }
 });
 
 events.on('restock', (data) => {
   for (var i = 0; i < config.webhook.length; i++) {
-    require('./src/webhook').send(config.webhook[i], data.url, 'restock')
+    require('./src/webhook').send(config.webhook[i], data.url, 'restock', data.time)
   }
 });

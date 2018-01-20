@@ -1,6 +1,8 @@
 # shopify-monitor
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+#### NOTE: I'm not sure this is going to be public for long, as this took me a long time to make and is really efficient.
+
 Extremely lightweight and efficient restock and new item monitor for various Shopify based sites. Extremely fast & proxy support.
 
 This monitor is more advanced than most monitors on the market currently that are PAID. I decided to code this monitor because

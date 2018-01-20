@@ -143,7 +143,8 @@ class init {
                       } else {
                         console.log('Restock: ' + newprod[i].title + ' - ' + site);
                         events.emit('restock', {
-                          url: newprod[i].url
+                          url: newprod[i].url,
+                          time: newprod[i].time.toString()
                         });
                       }
                     }
