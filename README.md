@@ -8,6 +8,8 @@ Extremely lightweight and efficient restock and new item monitor for various Sho
 This monitor is more advanced than most monitors on the market currently that are PAID. I decided to code this monitor because
 I was bored and thought I could help. Unlike other monitors on GitHub this acutally catches restocks and new items.
 
+![Image](https://i.gyazo.com/dcee0530f1ca506844651f744b058245.png)
+
 ## Requirements
 | Requirement | Version |
 | ---|---|

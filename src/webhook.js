@@ -42,7 +42,7 @@ exports.send = function send (webhook, product, type, timestamp) {
             stock = response.product.variants[i].inventory_quantity
           }
           if (response.product.variants[i].updated_at === timestamp) {
-            links += `**[${response.product.variants[i].title} - Checkout](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)**\nStock: ${stock}\n\n`
+            links += `[${response.product.variants[i].title} / Stock: ${stock}](http://${product.split('://')[1].split('/')[0]}/cart/${response.product.variants[i].id}:1)\n`
           }
         }
         if (type === 'restock') {
@@ -83,6 +83,11 @@ exports.send = function send (webhook, product, type, timestamp) {
         }
         function hookit() {
           //console.log('Im finna hook');
+          if (type === 'Restock') {
+            color = 16749381
+          } else {
+            color = 65440
+          }
           const opts = {
             method: 'POST',
             uri: webhook,
@@ -92,7 +97,7 @@ exports.send = function send (webhook, product, type, timestamp) {
             },
             body: {
               "embeds": [{
-                "color": 65440,
+                "color": color,
                 "title" : response.product.title.replace("\/", "/"),
                 "url": product,
                 "thumbnail": {
@@ -124,7 +129,7 @@ exports.send = function send (webhook, product, type, timestamp) {
                     "inline": true
           				},
                   {
-                    "name": "Restocked Sizes Links",
+                    "name": "Checkout Links",
                     "value": links,
                     "inline": true
                   }
