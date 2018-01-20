@@ -123,7 +123,7 @@ class init {
                   //console.log(newprod.length);
                   //console.log(original.length);
                   if (newprod.length > original.length) {
-                    console.log('New Item - '  + newprod[i].title + ' - ' + site);
+                    console.log('New Item - ' + site);
                     //console.log(diff(newprod, original));
                     events.emit('newitem', {
                       url: diff(newprod, original)[0].url
@@ -159,9 +159,6 @@ class init {
             }
           })
           .catch(function(err) {
-            setTimeout(function() {
-              initialize()
-            }, config.delay)
             //console.log('Err - ' + site);
           })
       }

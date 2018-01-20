@@ -3,7 +3,7 @@ const config = require('../config');
 exports.send = function send (webhook, product, type, timestamp) {
   const opts = {
     method: 'GET',
-    uri: `${product}.json`,
+    uri: product,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
     },
@@ -28,6 +28,7 @@ exports.send = function send (webhook, product, type, timestamp) {
       } else {
         start()
       }
+<<<<<<< HEAD
       function start() {
         links = ''
         for (var i = 0; i < response.product.variants.length; i++) {
@@ -130,5 +131,62 @@ exports.send = function send (webhook, product, type, timestamp) {
           })
       }
       }
+=======
+      const opts = {
+        method: 'POST',
+        uri: webhook,
+        json: true,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: {
+          "embeds": [{
+            "color": 65440,
+            "title" : response.product.title.replace("\/", "/"),
+            "url": product,
+            "thumbnail": {
+              "url": imageurl
+            },
+            "footer": {
+              "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+              "text": "Shopify Monitor by Rock"
+            },
+            "fields": [
+              {
+                "name": "Site",
+                "value": product.split('://')[1].split('/')[0],
+                "inline": true
+              },
+              {
+                "name": "Type",
+                "value": type,
+                "inline": true
+              },
+              {
+                "name": "Price",
+                "value": response.product.variants[0].price,
+                "inline": false
+              },
+              {
+                "name": "Links",
+                "value": links,
+                "inline": true
+              }
+            ]
+          }]
+        }
+      }
+      request(opts)
+      .then(function(response) {
+
+      })
+      .catch(function(response) {
+        if (response.message === 'You are being rate limited.') {
+          setTimeout(function() {
+            send(webhook, product, type)
+          }, 5000)
+        }
+      })
+>>>>>>> parent of f637d0a... YAY
     })
 }
