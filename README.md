@@ -38,4 +38,8 @@ If you come across an issue please make a GitHub issue for it and I will respond
 
 ## TODO
 
-1. No TODO for now.
+1. Code Overhaul
+2. Add Slack support
+3. Add a discord "rate-limit" fix
+4. Fix neg and pos keywords
+5. Fix task errors when you monitor over 50-60 sites.
