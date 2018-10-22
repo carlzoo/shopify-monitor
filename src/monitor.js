@@ -48,7 +48,6 @@ class init {
       function initialize() {
         //console.log('yo ' + site);
         var prox = getproxy()
-        //console.log(prox);
         var mainurl;
         if (site.startsWith('http') == true) {
           if (site.endsWith('/') == true) {
@@ -70,7 +69,7 @@ class init {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
           },
           gzip: true,
-          //proxy: prox,
+          proxy: getproxy(),
           json: true,
           simple: false
         }
