@@ -14,7 +14,7 @@
     "console-stamp": "^0.2.6",
     "diff": "^3.4.0",
     "earlylinkgen": "^1.0.3",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.13",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "underscore": "^1.8.3"
