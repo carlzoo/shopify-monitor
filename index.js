@@ -14,24 +14,24 @@ require("console-stamp")(console, {
 
 var mod = require(`./src/monitor`).init
 
+var sites = fs.readFileSync(__dirname + '/sites.txt').toString().replace(/\r/g, '').split('\n');
+
 console.log(chalk.red('-------------------------'));
 console.log(chalk.cyan('   Shopify Monitor V2'));
 console.log(chalk.cyan('        By Rock'));
 console.log(chalk.red('-------------------------'));
-console.log(chalk.magenta(`Found ${config.sites.length} sites.`));
+console.log(chalk.magenta(`Found ${sites.length} sites.`));
 console.log(chalk.magenta(`Found ${fs.readFileSync(__dirname + '/proxies.txt').toString().split("\n").length} proxies.`));
 console.log(chalk.red('-------------------------'));
-console.log(chalk.cyan('Initializing (' + config.sites.length + ') sites.'));
+console.log(chalk.cyan('Initializing (' + sites.length + ') sites.'));
 console.log(chalk.red('-------------------------'));
 
-config.sites.forEach(function (site) {
+sites.forEach(function (site) {
   startmod = new mod(site);
 });
 
 events.on('newitem', (data) => {
-  for (var i = 0; i < config.webhook.length; i++) {
-    require('./src/webhook.js').send(config.webhook[i], data.url, 'newitem', '')
-  }
+  require('./src/webhook.js').send(config.webhook, data.url, 'newitem', '')
 });
 
 events.on('restock', (data) => {
