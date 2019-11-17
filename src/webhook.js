@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const config = require('../config');
-exports.send = function send (webhook, product, type, timestamp) {
+exports.send = function (webhook, product, type, timestamp) {
   var proxylist = [];
   var fs = require('fs');
   var array = fs.readFileSync(__dirname + '/../proxies.txt').toString().split("\n");
@@ -106,10 +106,11 @@ exports.send = function send (webhook, product, type, timestamp) {
               }
             }
             if (matched == true) {
-              hookit()
-              if (sent == true) {
-
-              } else {
+              for (let i = 0; i < webhook.length; i++) {
+                const hook = webhook[i];
+                hookit(hook)
+              }
+              if (sent != true) {
                 sent = true;
                 console.log('Restock: ' + response.product.title.replace("\/", "/") + ' - ' + product.split("/produ")[0].split('//')[1]);
               }
@@ -118,9 +119,12 @@ exports.send = function send (webhook, product, type, timestamp) {
             //console.log('Na dawg it didnt - ' + response.product.title);
           }
         } else {
-          hookit()
+          for (let i = 0; i < webhook.length; i++) {
+            const hook = webhook[i];
+            hookit(hook)
+          }
         }
-        function hookit() {
+        function hookit(hookUrl) {
           //console.log('Im finna hook');
           if (type === 'Restock') {
             color = 16749381
@@ -129,7 +133,7 @@ exports.send = function send (webhook, product, type, timestamp) {
           }
           const opts = {
             method: 'POST',
-            uri: webhook,
+            uri: hookUrl,
             json: true,
             proxy: getproxy(),
             headers: {
