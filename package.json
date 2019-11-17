@@ -12,7 +12,7 @@
     "chalk": "^2.3.0",
     "cheerio": "^1.0.0-rc.2",
     "console-stamp": "^0.2.6",
-    "diff": "^3.4.0",
+    "diff": "^3.5.0",
     "earlylinkgen": "^1.0.3",
     "lodash": "^4.17.4",
     "request": "^2.83.0",
