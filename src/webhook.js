@@ -198,7 +198,7 @@ exports.send = function (webhook, product, type, timestamp) {
               }
             }
             setTimeout(function() {
-              send(webhook, product, type);
+              hookit(hookUrl);
             }, 10000)
           })
       }
