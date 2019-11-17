@@ -13,30 +13,31 @@ class init {
       var newprod = [];
       var proxylist = [];
       var fs = require('fs');
-      var array = fs.readFileSync(__dirname + '/../proxies.txt').toString().split("\n");
-      for (var i in array) {
-        if (array[i] === '') {
+      var array = fs.readFileSync(__dirname + '/../proxies.txt').toString().replace(/\r/g, '').split('\n');
+      
 
+      let formatProxy = function(proxy) {
+        if (proxy && ['localhost', ''].indexOf(proxy) < 0) {
+          proxy = proxy.replace(' ', '_');
+          const proxySplit = proxy.split(':');
+          if (proxySplit.length > 3) {
+            return "http://" + proxySplit[2] + ":" + proxySplit[3] + "@" + proxySplit[0] + ":" + proxySplit[1];
+          } else {
+            return "http://" + proxySplit[0] + ":" + proxySplit[1];
+          }
         } else {
-          proxylist.push(array[i])
+          return undefined;
         }
       }
 
       function getproxy() {
-        if (proxylist.length == 0) {
-          var proxy = 'http://localhost'
+        if (array.length == 0) {
+          var proxy = ''
           return proxy;
         } else {
-          var ogprox = proxylist[Math.floor(Math.random() * proxylist.length)]
-          if (ogprox.split(':')[2] == undefined) {
-            var proxy = `http://${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
-            return proxy;
-          } else {
-            var proxy = `http://${ogprox.split(':')[2]}:${ogprox.split(':')[3]}@${ogprox.split(':')[0]}:${ogprox.split(':')[1]}`
-            return proxy;
-          }
+          var ogprox = array[Math.floor(Math.random() * Math.floor(array.length))]
+          return formatProxy(ogprox)
         }
-        //console.log(proxy);
       }
 
       function diff(one, two) {
@@ -45,26 +46,44 @@ class init {
       //console.log(site);
       //console.log(diff(one, two));
       initialize()
-      function initialize() {
-        //console.log('yo ' + site);
-        var prox = getproxy()
+      async function initialize() {
         var mainurl;
+
         if (site.startsWith('http') == true) {
           if (site.endsWith('/') == true) {
-            mainurl = `${site}sitemap_products_1.xml`
+            mainurl = `${site}sitemap.xml`
           } else {
-            mainurl = `${site}/sitemap_products_1.xml`
+            mainurl = `${site}/sitemap.xml`
           }
         } else {
           if (site.endsWith('/') == true) {
-            mainurl = `https://${site}sitemap_products_1.xml`
+            mainurl = `https://${site}sitemap.xml`
           } else {
-            mainurl = `https://${site}/sitemap_products_1.xml`
+            mainurl = `https://${site}/sitemap.xml`
           }
         }
-        const opts = {
+
+        request({
           method: 'GET',
           uri: mainurl,
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
+          },
+          gzip: true,
+          proxy: getproxy(),
+          simple: false
+        }).then(function (data) {
+          let $ = cheerio.load(data)
+
+          let sitemap = $('loc')[0]
+
+          //console.log(sitemap.children[0].data);
+
+          let pingUrl = sitemap.children[0].data;
+          
+          const opts = {
+          method: 'GET',
+          uri: pingUrl,
           headers: {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'
           },
@@ -76,13 +95,18 @@ class init {
         request(opts)
           .then(function(data) {
           //console.log(data);
-         //console.log(`Cycle - ${cycle}`);
+            //console.log(`Cycle - ${cycle}`);
             if (cycle == 0) {
               console.log(chalk.green('Initialized - ' + site));
             }
             if (data.toString().indexOf("Try again in a couple minutes") != -1) {
               console.log(chalk.red('You are banned try again later. - ' + site));
               //console.log(data);
+              cycle++;
+              setTimeout(function() {
+                newprod = [];
+                initialize()
+              }, config.delay)
             } else {
               //console.log(cycle);
               var $ = cheerio.load(data);
@@ -117,9 +141,7 @@ class init {
                   }
 
                 });
-                if (cycle == 0) {
-
-                } else {
+                if (cycle != 0) {
                   //console.log(newprod.length);
                   //console.log(original.length);
                   if (newprod.length > original.length) {
@@ -170,8 +192,14 @@ class init {
             }
           })
           .catch(function(err) {
-            //console.log('Err - ' + site);
+            console.log('Err - ' + site);
+            cycle++;
+            setTimeout(function() {
+              newprod = [];
+              initialize()
+            }, config.delay)
           })
+        })
       }
   }
 }
