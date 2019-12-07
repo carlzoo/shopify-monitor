@@ -26,7 +26,9 @@ console.log(chalk.red('-------------------------'));
 console.log(chalk.cyan('Initializing (' + sites.length + ') sites.'));
 console.log(chalk.red('-------------------------'));
 
-sites.forEach(function (site) {
+sites.filter(function (element) {
+  return element.length > 0
+}).forEach(function (site) {
   startmod = new mod(site);
 });
 
